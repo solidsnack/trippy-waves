@@ -106,8 +106,8 @@ statement, below, to handle that:
 Next we need to set up two control registers in the ATtiny25 to tell it to generate
 interrupts for PB3 logic change (the AVR datasheet calls this a "Pin Change
 Interrupt").  You will see the following two lines in the main function, below:
-  GIMSK = 0b00100000;   // PCIE=1 to enable Pin Change Interrupts
-  PCMSK = 0b00001000;   // PCINT3 bit = 1 to enable Pin Change Interrupts for PB3
+  GIMSK = 0x20;//00100000   // PCIE=1 to enable Pin Change Interrupts
+  PCMSK = 0x08;//00001000   // PCINT3 bit = 1 to enable Pin Change Interrupts for PB3
 
 Finally, we need to enable the interrupts for the ATtiny25.  This line accomplishes
 that:
@@ -484,7 +484,7 @@ void delay_ten_us(unsigned long int us) {
     //   Since bits in binary numbers are labeled starting from 0, the bit in this binary number that is set to 1
     //     is called PB5, which is the one unsed PORTB pin, which is why we can use it here
     //     (to fool the optimizing compiler to not optimize away this delay loop).
-    for (count=0; count <= DelayCount; count++) PINB |= 0b00100000;
+    for (count=0; count <= DelayCount; count++) PINB |= 0x20;//00100000
     us--;
   }
 }
@@ -502,7 +502,7 @@ void delay_x_us(unsigned long int x) {
   while (x != 0) {
     // Toggling PB5 is done here to force the compiler to do this loop, rather than optimize it away
     //   (see NOTE in the comments in the delay_ten_us() function, above)
-    for (count=0; count <= DelayCount; count++) PINB |= 0b00100000;
+    for (count=0; count <= DelayCount; count++) PINB |= 0x20;//00100000
     x--;
   }
 }
@@ -516,9 +516,9 @@ void delay_x_us(unsigned long int x) {
 //     the total period is about 400 microseconds, which is 2500Hz (if we repeat it)
 //     (and that is way fast enough so that we don't perceive the Green LED flicker).
 void pulseGreen(unsigned char greenVal) {
-  PORTB &= 0b11111011;  // turn on Green LED at PB2 (pin 7) for 4 * Green value -- (by bringing this pin Low)
+  PORTB &= 0xFB;//11111011  // turn on Green LED at PB2 (pin 7) for 4 * Green value -- (by bringing this pin Low)
   delay_x_us( greenVal );
-  PORTB |= 0b00000100;  // turn off Green LED at PB2 for 4 * (255 - Green value) -- (by bringing this pin High)
+  PORTB |= 0x04;//00000100  // turn off Green LED at PB2 for 4 * (255 - Green value) -- (by bringing this pin High)
   delay_x_us( (255 - greenVal) );
 }
 
@@ -540,11 +540,11 @@ void pulseIR(void) {
   //   F = Fclk / (2 * Prescale * (1 + OCR0A) ) = 38KHz
   //
   // Please see the ATtiny25 datasheet for descriptions of these registers.
-  TCCR0A = 0b01000010;  // COM0A1:0=01 to toggle OC0A on Compare Match
+  TCCR0A = 0x42;//01000010  // COM0A1:0=01 to toggle OC0A on Compare Match
                         // COM0B1:0=00 to disconnect OC0B
                         // bits 3:2 are unused
                         // WGM01:00=10 for CTC Mode (WGM02=0 in TCCR0B)
-  TCCR0B = 0b00000001;  // FOC0A=0 (no force compare)
+  TCCR0B = 0x01;//00000001  // FOC0A=0 (no force compare)
                         // F0C0B=0 (no force compare)
                         // bits 5:4 are unused
                         // WGM2=0 for CTC Mode (WGM01:00=10 in TCCR0A)
@@ -555,8 +555,8 @@ void pulseIR(void) {
   delay_ten_us(17);   // delay 170 microseconds
 
   // turn off Timer0 to stop 38KHz pulsing of IR
-  TCCR0B = 0b00000000;  // CS02:CS00=000 to stop Timer0 (turn off IR emitter)
-  TCCR0A = 0b00000000;  // COM0A1:0=00 to disconnect OC0A from PB0 (pin 5)
+  TCCR0B = 0x00;//00000000  // CS02:CS00=000 to stop Timer0 (turn off IR emitter)
+  TCCR0A = 0x00;//00000000  // COM0A1:0=00 to disconnect OC0A from PB0 (pin 5)
 }
 
 
@@ -718,15 +718,15 @@ void sendrgbElement( int index ) {
 int main(void) {
   start_over:
   // disable the Watch Dog Timer (since we won't be using it, this will save battery power)
-  MCUSR = 0b00000000;   // first step:   WDRF=0 (Watch Dog Reset Flag)
-  WDTCR = 0b00011000;   // second step:  WDCE=1 and WDE=1 (Watch Dog Change Enable and Watch Dog Enable)
-  WDTCR = 0b00000000;   // third step:   WDE=0
+  MCUSR = 0x00;//00000000   // first step:   WDRF=0 (Watch Dog Reset Flag)
+  WDTCR = 0x18;//00011000   // second step:  WDCE=1 and WDE=1 (Watch Dog Change Enable and Watch Dog Enable)
+  WDTCR = 0x00;//00000000   // third step:   WDE=0
   // turn off power to the USI and ADC modules (since we won't be using it, this will save battery power)
-  PRR = 0b00000011;
+  PRR = 0x03;//00000011
   // disable all Timer interrupts
   TIMSK = 0x00;         // setting a bit to 0 disables interrupts
   // set up the input and output pins (the ATtiny25 only has PORTB pins)
-  DDRB = 0b00010111;    // setting a bit to 1 makes it an output, setting a bit to 0 makes it an input
+  DDRB = 0x17;//00010111    // setting a bit to 1 makes it an output, setting a bit to 0 makes it an input
                         //   PB5 (unused) is input
                         //   PB4 (Blue LED) is output
                         //   PB3 (IR detect) is input
@@ -736,8 +736,8 @@ int main(void) {
   PORTB = 0xFF;         // all PORTB output pins High (all LEDs off) -- (if we set an input pin High it activates a pull-up resistor, which we don't need, but don't care about either)
 
   // set up PB3 so that a logic change causes an interrupt (this will happen when the IR detector goes from seeing IR to not seeing IR, or from not seeing IR to seeing IR)
-  GIMSK = 0b00100000;   // PCIE=1 to enable Pin Change Interrupts
-  PCMSK = 0b00001000;   // PCINT3 bit = 1 to enable Pin Change Interrupts for PB3
+  GIMSK = 0x20;//00100000   // PCIE=1 to enable Pin Change Interrupts
+  PCMSK = 0x08;//00001000   // PCINT3 bit = 1 to enable Pin Change Interrupts for PB3
   sei();                // enable microcontroller interrupts
 
   // this global var gets set to 1 in the interrupt service routine if the IR detector sees IR
@@ -771,14 +771,14 @@ int main(void) {
   //     by varying the value of OCR1B between 0 and 255.
   //
   // Please see the ATtiny25 datasheet for descriptions of these registers.
-  GTCCR = 0b01110000;   // TSM=0 (we are not using synchronization mode)
+  GTCCR = 0x70;//01110000   // TSM=0 (we are not using synchronization mode)
                         // PWM1B=1 for PWM mode for compare register B
                         // COM1B1:0=11 for inverting PWM on OC1B (Blue LED output pin)
                         // FOC1B=0 (no Force Output Compare for compare register B)
                         // FOC1A=0 (no Force Output Compare for compare register A)
                         // PSR1=0 (do not reset the prescaler)
                         // PSR0=0 (do not reset the prescaler)
-  TCCR1 = 0b01111001;   // CTC1=0 for PWM mode
+  TCCR1 = 0x79;//01111001   // CTC1=0 for PWM mode
                         // PWM1A=1 for PWM mode for compare register A
                         // COM1A1:0=11 for inverting PWM on OC1A (Red LED output pin)
                         // CS13:0=1001 for Prescale=256 (this starts Timer 1)
@@ -812,14 +812,14 @@ int main(void) {
   // Shut down everything and put the CPU to sleep
   cli();                 // disable microcontroller interrupts
   delay_ten_us(10000);   // wait .1 second
-  TCCR0B &= 0b11111000;  // CS02:CS00=000 to stop Timer0 (turn off IR emitter)
-  TCCR0A &= 0b00111111;  // COM0A1:0=00 to disconnect OC0A from PB0 (pin 5)
-  TCCR1 &= 0b11110000;   // CS13:CS10=0000 to stop Timer1 (turn off Red and Blue LEDs)
-  TCCR1 &= 0b11001111;   // COM1A1:0=00 to disconnect OC1A from PB1 (pin 6)
-  GTCCR &= 0b11001111;   // COM1B1:0=00 to disconnect OC1B from PB4 (pin 3)
+  TCCR0B &= 0xF8;//11111000  // CS02:CS00=000 to stop Timer0 (turn off IR emitter)
+  TCCR0A &= 0x3F;//00111111  // COM0A1:0=00 to disconnect OC0A from PB0 (pin 5)
+  TCCR1 &= 0xF0;//11110000   // CS13:CS10=0000 to stop Timer1 (turn off Red and Blue LEDs)
+  TCCR1 &= 0xCF;//11001111   // COM1A1:0=00 to disconnect OC1A from PB1 (pin 6)
+  GTCCR &= 0xCF;//11001111   // COM1B1:0=00 to disconnect OC1B from PB4 (pin 3)
   DDRB = 0x00;           // make PORTB all inputs (saves battery power)
   PORTB = 0xFF;          // enable pull-up resistors on all PORTB input pins (saves battery power)
-  MCUCR |= 0b00100000;   // SE=1 (bit 5)
-  MCUCR |= 0b00010000;   // SM1:0=10 to enable Power Down Sleep Mode (bits 4, 3)
+  MCUCR |= 0x20;//00100000   // SE=1 (bit 5)
+  MCUCR |= 0x10;//00010000   // SM1:0=10 to enable Power Down Sleep Mode (bits 4, 3)
   sleep_cpu();           // put CPU into Power Down Sleep Mode
 }
