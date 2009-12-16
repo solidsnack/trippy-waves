@@ -484,7 +484,7 @@ void delay_ten_us(unsigned long int us) {
     //   Since bits in binary numbers are labeled starting from 0, the bit in this binary number that is set to 1
     //     is called PB5, which is the one unsed PORTB pin, which is why we can use it here
     //     (to fool the optimizing compiler to not optimize away this delay loop).
-    for (count=0; count <= DelayCount; count++) {PINB |= 0b00100000;};
+    for (count=0; count <= DelayCount; count++) PINB |= 0b00100000;
     us--;
   }
 }
