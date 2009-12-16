@@ -502,7 +502,7 @@ void delay_x_us(unsigned long int x) {
   while (x != 0) {
     // Toggling PB5 is done here to force the compiler to do this loop, rather than optimize it away
     //   (see NOTE in the comments in the delay_ten_us() function, above)
-    for (count=0; count <= DelayCount; count++) {PINB |= 0b00100000;};
+    for (count=0; count <= DelayCount; count++) PINB |= 0b00100000;
     x--;
   }
 }
