@@ -1,7 +1,7 @@
 MCU = attiny25
 F_CPU = 8000000   	# 8 MHz
 AVRDUDE_PROGRAMMER = usbtiny
-AVRDUDE_PORT = usb	# programmer connected to USB
+AVRDUDE_PORT ?= usb	# programmer connected to USB
 
 
 # Default target.
@@ -20,7 +20,7 @@ burn-fuse:
 
 # this programs the dependant hex file using our default avrdude flags
 program-%:
-	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)$<
+	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_U)$<
 
 
 FORMAT = ihex 		# create a .hex file
@@ -68,12 +68,10 @@ LDFLAGS = -Wl,-Map=$(TARGET).map,--cref
 # Programming support using avrdude.
 AVRDUDE = avrdude
 
-# Programming support using avrdude. Settings and variables.
+AVRDUDE_OP ?= flash:w:
+AVRDUDE_U = -U $(AVRDUDE_OP)
 
-AVRDUDE_WRITE_FLASH = -U flash:w:
-
-AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
-
+AVRDUDE_FLAGS += -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
 # ---------------------------------------------------------------------------
 
 # Define directories, if needed.
