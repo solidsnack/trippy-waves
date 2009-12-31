@@ -1,4 +1,4 @@
-
+#!/usr/bin/env runhaskell
 
 import Control.Applicative
 import Data.List (foldl')
@@ -7,12 +7,11 @@ import Data.Word
 import Language.Atom
 
 import Biterate
+import qualified AVR
 
 
 
 
-includes                     =  ("#include <" ++) . (++ ">") . ("avr/" ++) <$>
-  [ "io.h", "interrupt.h", "sleep.h", "pgmspace.h" ]
 
 {-| We are outputting on @PORTB@, the eight pins coming out of the
     ATtiny25 chip. We need to set the pins to be input or output, as
@@ -25,14 +24,14 @@ set_up_pins                  =  "set_up_pins" `atom` do
      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -}
     directions              <-  word8' "DDRB"
     directions <== biterate
-      [ 0   --  PB7 does nothing.
-      , 0   --  PB6 does nothing.
-      , 0   --  PB5 does nothing.
-      , 1   --  PB4 is the blue LED.
-      , 0   --  PB3 is the infrared detector.
-      , 1   --  PB2 is the green LED.
-      , 1   --  PB1 is the red LED.
-      , 1 ] --  PB0 is the infrared emitter.
+      [ 0   --  PORTB7 is read only, per the ATtiny25 datasheet.
+      , 0   --  PORTB6 is read only, per the ATtiny25 datasheet.
+      , 0   --  PORTB5 does nothing in this application.
+      , 1   --  PORTB4 is the blue LED.
+      , 0   --  PORTB3 is the infrared detector.
+      , 1   --  PORTB2 is the green LED.
+      , 1   --  PORTB1 is the red LED.
+      , 1 ] --  PORTB0 is the infrared emitter.
     pins                    <-  word8' "PORTB"
     pins <== biterate [1,1,1,1,1,1,1,1] -- Turns LEDs off.
 
@@ -55,4 +54,6 @@ set_up_pins                  =  "set_up_pins" `atom` do
 --      dDRD       <== 255
 --      initialize <== false
 
+
+main                         =  compile "main" AVR.config set_up_pins
 
