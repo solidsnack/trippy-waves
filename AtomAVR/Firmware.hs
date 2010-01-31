@@ -9,9 +9,11 @@ import AtomAVR.Elements
 
 
 data ISR i where
-  ISR                       ::  (Interrupt i) => i -> Atom () -> ISR i
+  Blocking                  ::  (Interrupt i) => i -> Atom () -> ISR i
+  Nonblocking               ::  (Interrupt i) => i -> Atom () -> ISR i
 instance (Show i) => Show (ISR i) where
-  show (ISR i atom)          =  unwords ["ISR", show i, "<atom>"]
+  show (Blocking i _)        =  unwords ["Blocking ISR", show i, "<atom>"]
+  show (Nonblocking i _)     =  unwords ["Nonblocking ISR", show i, "<atom>"]
 
 data Firmware i where
   Firmware :: (Interrupt i) => Atom () -> [ISR i] -> Firmware i
