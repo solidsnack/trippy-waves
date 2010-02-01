@@ -1,0 +1,29 @@
+
+  A discussion of interrupt resumption, at 2010-01-31T23:56:17Z by
+  `avrPhreaque' on `#avr':
+
+    when the processor processes an Interrupt, it pushes the current PC onto
+    the stack, and jumps to the interrupt vector of the new interrupt request.
+    Hence, when that ISR is finished, the processor SHOULD pick up where it
+    left off in the previous ISR.  (allowing nested interrupts is often a bad
+    idea, especially on slow, 8 bit processors)
+
+  When an ISR `a' is "blocking", any interrupts that occur while it is running
+  are queued, per the ATtiny25 datasheet:
+
+    There are basically two types of interrupts. The first type is triggered
+    by an event that sets the Interrupt Flag. For these interrupts, the
+    Program Counter is vectored to the actual Interrupt Vec- tor in order to
+    execute the interrupt handling routine, and hardware clears the
+    corresponding Interrupt Flag. Interrupt Flags can also be cleared by
+    writing a logic one to the flag bit position(s) to be cleared. If an
+    interrupt condition occurs while the corresponding interrupt enable bit is
+    cleared, the Interrupt Flag will be set and remembered until the interrupt
+    is enabled, or the flag is cleared by software. Similarly, if one or more
+    interrupt conditions occur while the Global Interrupt Enable bit is
+    cleared, the corresponding Interrupt Flag(s) will be set and remembered
+    until the Global Interrupt Enable bit is set, and will then be executed by
+    order of priority.
+
+
+
