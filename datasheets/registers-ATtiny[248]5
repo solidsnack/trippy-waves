@@ -1,0 +1,72 @@
+0x3F    SREG    I       T       H       S       V       N       Z       C
+0x3E    SPH     -       -       -       -       -       -       SP9     SP8
+0x3D    SPL     SP7     SP6     SP5     SP4     SP3     SP2     SP1     SP0
+0x3C    Reserved
+0x3B    GIMSK   -       INT0    PCIE    -       -       -       -       -
+0x3A    GIFR    -       INTF0   PCIF    -       -       -       -       -
+0x39    TIMSK   -       OCIE1A  OCIE1B  OCIE0A  OCIE0B  TOIE1   TOIE0   -
+0x38 TIFR         -    OCF1A   OCF1B           OCF0A              OCF0B        TOV1    TOV0      -            page 84 
+0x37 SPMCSR       -       -     RSIG            CTPB               RFLB      PGWRT    PGERS   SPMEN          page 149 
+0x36 Reserved                                               - 
+0x35 MCUCR     BODS     PUD       SE             SM1               SM0        BODSE    ISC01   ISC00 page 38,page 52, page 66, 
+0x34 MCUSR        -       -        -               -              WDRF         BORF   EXTRF    PORF          page 47, 
+0x33 TCCR0B    FOC0A   FOC0B       -               -             WGM02         CS02     CS01    CS00          page 82 
+0x32 TCNT0                                            Timer/Counter0                                          page 83 
+0x31 OSCCAL                                  Oscillator Calibration Register                                  page 32 
+0x30 TCCR1      CTC1  PWM1A   COM1A1          COM1A0               CS13        CS12     CS11    CS10     page 92, page 103 
+0x2F TCNT1                                           Timer/Counter1                                      page 94, page 105 
+0x2E OCR1A                            Timer/Counter1 Output Compare Register A                           page 94, page 105 
+0x2D OCR1C                            Timer/Counter1 Output Compare Register C                           page 95, page 106 
+                                                                                                      page 80, page 93, page 
+0x2C GTCCR      TSM   PWM1B   COM1B1          COM1B0              FOC1B       FOC1A    PSR1    PSR0 
+0x2B OCR1B                            Timer/Counter1 Output Compare Register B                                page 95 
+0x2A TCCR0A   COM0A1  COM0A0  COM0B1          COM0B0                 -               WGM01   WGM00            page 80 
+0x29 OCR0A                           Timer/Counter0 - Output Compare Register A                               page 83 
+0x28 OCR0B                           Timer/Counter0 - Output Compare Register B                               page 84 
+0x27 PLLCSR     LSM       -        -               -                 -         PCKE     PLLE  PLOCK      page 97, page 107 
+                          -        -               -             CLKPS3      CLKPS2  CLKPS1  CLKPS0           page 33 
+0x26 CLKPR    CLKPCE 
+0x25 DT1A     DT1AH3  DT1AH2  DT1AH1           DT1AH0            DT1AL3      DT1AL2  DT1AL1  DT1AL0          page 110 
+0x24 DT1B     DT1BH3  DT1BH2  DT1BH1           DT1BH0            DT1BL3      DT1BL2  DT1BL1  DT1BL0          page 110 
+0x23 DTPS1        -       -        -                -                -           -   DTPS11  DTPS10          page 109 
+0x22 DWDR                                               DWDR[7:0]                                            page 144 
+0x21 WDTCR      WDIF    WDIE   WDP3             WDCE               WDE         WDP2   WDP1    WDP0            page 47 
+0x20 PRR          -                                              PRTIM1      PRTIM0   PRUSI   PRADC           page 37 
+                                                                                              EEAR8           page 20 
+0x1F EEARH 
+0x1E EEARL     EEAR7   EEAR6   EEAR5           EEAR4              EEAR3       EEAR2   EEAR1   EEAR0           page 20 
+0x1D EEDR                                      EEPROM Data Register                                           page 20 
+0x1C EECR         -       -   EEPM1            EEPM0              EERIE       EEMPE    EEPE    EERE           page 21 
+0x1B Reserved                                               - 
+0x1A Reserved                                               - 
+                                                            - 
+0x19 Reserved 
+0x18    PORTB   -       -       PORTB5  PORTB4  PORTB3  PORTB2  PORTB1  PORTB0
+0x17    DDRB    -       -       DDB5    DDB4    DDB3    DDB2    DDB1    DDB0
+0x16    PINB    -       -       PINB5   PINB4   PINB3   PINB2   PINB1   PINB0
+0x15 PCMSK        -       -   PCINT5           PCINT4            PCINT3       PCINT2 PCINT1  PCINT0           page 54 
+0x14 DIDR0        -       -   ADC0D            ADC2D              ADC3D       ADC1D   AIN1D   AIN0D     page 125, page 142 
+0x13 GPIOR2                                 General Purpose I/O Register 2                                    page 10 
+0x12 GPIOR1                                 General Purpose I/O Register 1                                    page 10 
+0x11 GPIOR0                                 General Purpose I/O Register 0                                    page 10 
+0x10 USIBR                                        USI Buffer Register                                        page 118 
+0x0F USIDR                                         USI Data Register                                         page 118 
+0x0E USISR     USISIF  USIOIF  USIPF            USIDC            USICNT3     USICNT2 USICNT1 USICNT0         page 119 
+0x0D USICR     USISIE  USIOIE USIWM1          USIWM0             USICS1      USICS0  USICLK   USITC          page 120 
+                                                            - 
+0x0C Reserved 
+0x0B Reserved                                               - 
+0x0A Reserved                                               - 
+                                                            - 
+0x09 Reserved 
+0x08 ACSR       ACD    ACBG     ACO               ACI              ACIE          -    ACIS1   ACIS0          page 124 
+0x07 ADMUX     REFS1   REFS0   ADLAR           REFS2              MUX3         MUX2    MUX1    MUX0          page 138 
+                               ADATE             ADIF              ADIE       ADPS2   ADPS1   ADPS0          page 140 
+0x06 ADCSRA    ADEN    ADSC 
+0x05 ADCH                                    ADC Data Register High Byte                                     page 141 
+0x04 ADCL                                    ADC Data Register Low Byte                                      page 141 
+0x03 ADCSRB      BIN   ACME      IPR               -                 -        ADTS2   ADTS1   ADTS0     page 124, page 141 
+0x02 Reserved                                               - 
+                                                            - 
+0x01 Reserved 
+0x00 Reserved                                               -
