@@ -7,12 +7,8 @@ import Foreign.C
 
 
 
---foreign import ccall safe "addresses.h & PORTB" rPORTB :: Ptr Word8
---foreign import ccall safe "addresses.h & DDRB" rDDRB :: Ptr Word8
-foreign import primitive "const.SEEK_SET"
-  rDDRB :: Ptr Word8
-foreign import primitive "const.SEEK_SET"
-  rPORTB :: Ptr Word8
+foreign import ccall safe "addresses.h PORTB" rPORTB :: Ptr Word8
+foreign import ccall safe "addresses.h DDRB" rDDRB :: Ptr Word8
 
 
 

@@ -875,7 +875,6 @@ static void
 jhc_arch_assert(void)
 {
 }
-#include <&>
 #include <addresses.h>
 
 
